@@ -29,18 +29,19 @@ jobs:
           spring.datasource.url: ${{ secrets.DB_URL }}
           spring.datasource.username: ${{ secrets.DB_USERNAME }}
           spring.datasource.password: ${{ secrets.DB_PASSWORD }}
+          jwt.secret.access: ${{ secrets.ACCESS_KEY }}
+          jwt.secret.refresh: ${{ secrets.REFRESH_KEY }}
 
-#      - name: create application.yml
-#        run: |
-#          mkdir ./backend/src/main/resources
-#          cd ./backend/src/main/resources
-#          touch ./application.yml
-#          echo "${{ secrets.APPLICATION }}" > ./application.yml
-#        shell: bash
 
       - name: Build with Gradle
         working-directory: ./backend
         run: chmod +x ./gradlew && ./gradlew bootJar
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-app
+          path: ./backend/build/libs/*.jar
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -67,5 +68,5 @@ jobs:
         with:
           app-name: 'daeda'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7B1FF0C0D91D4BB996CF6DB6DFB10708 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_00E61F05A52D40D3AFD08649593E3434 }}
           package: '*.jar'

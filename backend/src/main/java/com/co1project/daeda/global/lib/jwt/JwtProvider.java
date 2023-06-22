@@ -2,17 +2,17 @@ package com.co1project.daeda.global.lib.jwt;
 
 import com.co1project.daeda.domain.user.domain.User;
 import com.co1project.daeda.domain.user.domain.repository.UserRepository;
+import com.co1project.daeda.global.exception.global.InvalidTokenException;
 import com.co1project.daeda.global.properties.JwtProperties;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -52,5 +52,26 @@ public class JwtProvider {
                 .signWith(SIGNATURE_ALGORITHM, securityKey);
 
         return jwtBuilder.compact();
+    }
+
+    public User validateToken(String token) {
+
+        Claims claims = Jwts.parser().setSigningKey(jwtProperties.getAccessKey()).parseClaimsJws(token).getBody();
+
+        return userRepository.findById(claims.get("userId", Long.class))
+                .orElseThrow(() -> InvalidTokenException.EXCEPTION);
+    }
+
+    public String extract(HttpServletRequest request, String type) {
+        Enumeration<String> headers = request.getHeaders("Authorization");
+
+        while (headers.hasMoreElements()) {
+            String value = headers.nextElement();
+            if (value.startsWith(type)) {
+                return value.substring(type.length()).trim();
+            }
+        }
+
+        return null;
     }
 }

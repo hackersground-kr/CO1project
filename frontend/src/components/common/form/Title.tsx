@@ -4,6 +4,7 @@ import * as S from "./Title.style";
 interface ITitleFormProps {
   title: string;
   context: string;
+  isSearch?: boolean;
 }
 
 const Title = (props: ITitleFormProps) => {

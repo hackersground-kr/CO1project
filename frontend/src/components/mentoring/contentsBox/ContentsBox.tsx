@@ -1,24 +1,36 @@
 import React, { Dispatch, SetStateAction } from "react";
 import * as S from "./ContentsBox.style";
 import LogoImg from "../../../asset/Logo.svg";
+import { IServerMentorListValue } from "../../../types/IMentorValue";
 
 const ContentsBox = ({
-  setState,
+  setModalActiveState,
+  setModalState,
+  mentoringId,
+  state,
 }: {
-  setState: Dispatch<SetStateAction<boolean>>;
+  setModalActiveState: Dispatch<SetStateAction<boolean>>;
+  setModalState: Dispatch<SetStateAction<number>>;
+  mentoringId: number;
+  state: IServerMentorListValue;
 }) => {
   return (
-    <S.MainContainer onClick={() => setState(true)}>
+    <S.MainContainer
+      onClick={() => {
+        setModalActiveState(true);
+        setModalState(mentoringId);
+      }}
+    >
       <S.ImageWrap>
         <S.UserImage src={LogoImg} alt="" />
         <div>
-          <S.NameElement>이름</S.NameElement>
-          <S.YearSalesFont>연매출 1억</S.YearSalesFont>
+          <S.NameElement>{state.user.nickname}</S.NameElement>
+          <S.YearSalesFont>{state.annualSales}</S.YearSalesFont>
         </div>
       </S.ImageWrap>
       <S.PriceWrap>
         <S.PerTimes>1시간 /</S.PerTimes>
-        <p>50000</p>
+        <p>{state.price}</p>
       </S.PriceWrap>
     </S.MainContainer>
   );

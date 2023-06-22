@@ -13,7 +13,7 @@ const Header = () => {
           <span>대다</span>
         </S.LogoWrap>
         <S.ContentsWrap>
-          <span>경험 공유</span>
+          <span onClick={() => navigate("/experience")}>경험 공유</span>
           <span onClick={() => navigate("/mentor")}>멘토링</span>
           <span>투자 모집</span>
           <span>내정보</span>
